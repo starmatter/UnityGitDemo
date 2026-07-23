@@ -11,6 +11,7 @@
 		}
 	],
 	"Plugins": [
+		{ "Name": "EnhancedInput",            "Enabled": true },
 		{ "Name": "Niagara",                  "Enabled": true },
 		{ "Name": "ProceduralMeshComponent",  "Enabled": true },
 		{ "Name": "Paper2D",                  "Enabled": false }
