@@ -1,0 +1,139 @@
+═══════════════════════════════════════════════════════════════════════
+  THE BOOK OF FIVE RINGS — Unreal Engine 5 Animated Presentation
+  Go Rin No Sho  |  Miyamoto Musashi  |  Written 1643 CE
+═══════════════════════════════════════════════════════════════════════
+
+  地 Earth → BROLY          (Foundation & Self-Mastery)
+  水 Water → SUPERMAN/KAL-EL (Persistence & Adaptability)
+  火 Fire  → VEGETA          (Timing & Royal Pride)
+  風 Wind  → GOKU            (Mastery of All Schools)
+  空 Void  → GOKU ULTRA INST.(Beyond Thought — Perfect Response)
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 1 — DOWNLOAD UNREAL ENGINE 5
+═══════════════════════════════════════════════════════════════════════
+
+  Official download (free):
+  https://www.unrealengine.com/download
+
+  1. Click "Download" on the page
+  2. Install the Epic Games Launcher
+  3. Inside the Launcher, go to:
+       Unreal Engine → Library → Engine Versions
+  4. Click the [+] button and select version 5.3 (or newer)
+  5. Click "Install" — this downloads ~30 GB, allow 30–90 minutes
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 2 — OPEN THE PROJECT
+═══════════════════════════════════════════════════════════════════════
+
+  Option A — From Epic Games Launcher
+  ─────────────────────────────────────
+  1. In the Launcher, click "Unreal Engine" → "Library"
+  2. Under "My Projects" click "Browse"
+  3. Navigate to this folder and select:
+       BookOfFiveRings.uproject
+  4. Click "Open"
+
+  Option B — Double-click the .uproject file
+  ─────────────────────────────────────
+  1. In File Explorer, navigate to this folder
+  2. Double-click "BookOfFiveRings.uproject"
+  3. If prompted to rebuild modules, click "Yes"
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 3 — COMPLETE PROJECT SETUP IN THE EDITOR
+═══════════════════════════════════════════════════════════════════════
+
+  A. Create the Widget Blueprint
+  ───────────────────────────────
+  1. Content Browser → Right-click → User Interface → Widget Blueprint
+  2. Name it: WBP_Presentation
+  3. Parent class: PresentationWidget
+  4. Open it and add these elements (match names exactly):
+       · Image  named "Background"       — full-screen, anchor = stretch
+       · Image  named "ScrollBorder"     — anchored 3% inset
+       · Text   named "ScrollTitleText"  — top center, font 68
+       · Text   named "JapaneseCharText" — below title, font 52
+       · Text   named "MusashiQuoteText" — center, font 26, italic
+       · Text   named "CharacterNameText"— lower center, font 54, bold
+       · Text   named "PrinciplesText"   — bottom-left, font 24
+       · Text   named "PhilosophyText"   — bottom-right, font 22, italic
+  5. Compile and Save
+
+  B. Set the Game Mode
+  ─────────────────────
+  1. Edit → Project Settings → Maps & Modes
+  2. Default GameMode: BookOfFiveRingsGameMode
+  3. In the Game Mode's Details panel, set:
+       Widget Class → WBP_Presentation
+
+  C. Create the Presentation Map
+  ───────────────────────────────
+  1. File → New Level → Empty Level
+  2. Add lighting:
+       - Sky Atmosphere
+       - Directional Light (warm, 45° angle)
+       - Point Light near the character stage position
+  3. Save as: Content/Maps/PresentationMap
+  4. Edit → Project Settings → Maps & Modes
+       Editor Startup Map + Game Default Map → PresentationMap
+
+  D. Optional — Create a Niagara Aura System
+  ────────────────────────────────────────────
+  1. Content Browser → Niagara System → New System from Template
+  2. Choose "Fountain" or "Sprite Burst" template
+  3. Name it: NS_CharacterAura
+  4. Assign it to the AFighterActor's AuraFX component in Blueprints
+
+═══════════════════════════════════════════════════════════════════════
+  STEP 4 — RUN THE PRESENTATION
+═══════════════════════════════════════════════════════════════════════
+
+  Press ▶ Play (or Ctrl+P) in the UE5 editor
+  Press Escape to quit
+
+  Controls during playback:
+    Space / Enter  — Skip current section
+    Escape         — Quit
+
+═══════════════════════════════════════════════════════════════════════
+  PROJECT FILE STRUCTURE
+═══════════════════════════════════════════════════════════════════════
+
+  BookOfFiveRings/
+  ├── BookOfFiveRings.uproject
+  ├── SETUP_GUIDE.txt                   ← you are here
+  ├── Config/
+  │   ├── DefaultEngine.ini
+  │   ├── DefaultGame.ini
+  │   └── DefaultInput.ini
+  └── Source/BookOfFiveRings/
+      ├── BookOfFiveRings.Build.cs      — module dependencies
+      ├── BookOfFiveRings.h/.cpp        — module entry point
+      ├── Data/
+      │   ├── ScrollDataAsset.h/.cpp    — 5 scroll data containers
+      │   └── CharacterDataAsset.h/.cpp — fighter profiles + move lists
+      ├── Core/
+      │   ├── BookOfFiveRingsGameMode   — spawns all actors, builds all data
+      │   └── PresentationManager      — master sequence step-queue
+      ├── Characters/
+      │   └── FighterActor             — body/sword/aura/light actor
+      ├── Animation/
+      │   └── SwordplayComponent       — 8 sword-trail move types
+      └── UI/
+          └── PresentationWidget       — UMG typewriter + transitions
+
+═══════════════════════════════════════════════════════════════════════
+  SYSTEM REQUIREMENTS (UE5)
+═══════════════════════════════════════════════════════════════════════
+
+  OS:      Windows 10/11 64-bit (or macOS 13+)
+  CPU:     6-core Intel/AMD (2.6 GHz+)
+  RAM:     32 GB recommended (16 GB minimum)
+  GPU:     8 GB VRAM — NVIDIA RTX 2070 / AMD RX 5700 or better
+  Storage: 50 GB free (25 GB UE5 engine + 25 GB project room)
+
+═══════════════════════════════════════════════════════════════════════
+  "Accept everything just the way it is."  — Miyamoto Musashi
+═══════════════════════════════════════════════════════════════════════
