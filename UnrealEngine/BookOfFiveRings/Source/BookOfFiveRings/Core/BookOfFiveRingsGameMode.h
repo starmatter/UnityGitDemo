@@ -6,6 +6,8 @@
 #include "Data/CharacterDataAsset.h"
 #include "Characters/FighterActor.h"
 #include "Core/PresentationManager.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 #include "BookOfFiveRingsGameMode.generated.h"
 
 /**
@@ -14,6 +16,9 @@
  * Equivalent to Unity's GameBootstrapper — creates all scroll and
  * character data as runtime UObjects, spawns the FighterActor and
  * PresentationManager, then passes references so the presentation runs.
+ *
+ * Uses UE 5.8 Enhanced Input System: UInputAction + UInputMappingContext
+ * registered programmatically with UEnhancedInputLocalPlayerSubsystem.
  *
  * Set this class as the Game Mode in DefaultEngine.ini (already done).
  */
@@ -43,4 +48,11 @@ private:
 
     static FSwordplayMove MakeMove(const FString& Name, const FString& Desc,
                                    const FLinearColor& Color, float Duration, EMoveType Type);
+
+    // Enhanced Input — created at runtime, no content assets needed
+    UPROPERTY() UInputMappingContext* PresentationIMC   = nullptr;
+    UPROPERTY() UInputAction*         IA_Skip           = nullptr;
+    UPROPERTY() UInputAction*         IA_Quit           = nullptr;
+
+    void SetupEnhancedInput(APlayerController* PC, APresentationManager* Mgr);
 };

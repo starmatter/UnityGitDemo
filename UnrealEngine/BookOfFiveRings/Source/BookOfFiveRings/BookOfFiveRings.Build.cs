@@ -12,6 +12,7 @@ public class BookOfFiveRings : ModuleRules
             "CoreUObject",
             "Engine",
             "InputCore",
+            "EnhancedInput",
             "Niagara",
             "UMG",
             "Slate",

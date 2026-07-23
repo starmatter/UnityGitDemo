@@ -34,6 +34,13 @@ class BOOKOFFIVERINGS_API APresentationManager : public AActor
 public:
     APresentationManager();
 
+    // ── Enhanced Input callbacks (bound by BookOfFiveRingsGameMode) ───────────
+    UFUNCTION()
+    void SkipSection();
+
+    UFUNCTION()
+    void QuitPresentation();
+
     // ── References (set in Blueprint or via GameMode spawn) ───────────────────
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     TArray<UScrollDataAsset*> Scrolls;

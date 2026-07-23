@@ -10,7 +10,7 @@
   空 Void  → GOKU ULTRA INST.(Beyond Thought — Perfect Response)
 
 ═══════════════════════════════════════════════════════════════════════
-  STEP 1 — DOWNLOAD UNREAL ENGINE 5
+  STEP 1 — DOWNLOAD UNREAL ENGINE 5.8
 ═══════════════════════════════════════════════════════════════════════
 
   Official download (free):
@@ -20,7 +20,7 @@
   2. Install the Epic Games Launcher
   3. Inside the Launcher, go to:
        Unreal Engine → Library → Engine Versions
-  4. Click the [+] button and select version 5.3 (or newer)
+  4. Click the [+] button and select version 5.8 (or the latest 5.x)
   5. Click "Install" — this downloads ~30 GB, allow 30–90 minutes
 
 ═══════════════════════════════════════════════════════════════════════
@@ -45,7 +45,14 @@
   STEP 3 — COMPLETE PROJECT SETUP IN THE EDITOR
 ═══════════════════════════════════════════════════════════════════════
 
-  A. Create the Widget Blueprint
+  A. Enable Required Plugins (verify these are on)
+  ──────────────────────────────────────────────────
+  1. Edit → Plugins → search "Enhanced Input" → Enable (restart if needed)
+  2. Edit → Plugins → search "Niagara" → Enable
+  3. Edit → Plugins → search "Procedural Mesh" → Enable
+  These match the .uproject Plugins entries and are enabled by default in 5.8.
+
+  B. Create the Widget Blueprint
   ───────────────────────────────
   1. Content Browser → Right-click → User Interface → Widget Blueprint
   2. Name it: WBP_Presentation
@@ -61,14 +68,14 @@
        · Text   named "PhilosophyText"   — bottom-right, font 22, italic
   5. Compile and Save
 
-  B. Set the Game Mode
+  C. Set the Game Mode
   ─────────────────────
   1. Edit → Project Settings → Maps & Modes
   2. Default GameMode: BookOfFiveRingsGameMode
   3. In the Game Mode's Details panel, set:
        Widget Class → WBP_Presentation
 
-  C. Create the Presentation Map
+  D. Create the Presentation Map
   ───────────────────────────────
   1. File → New Level → Empty Level
   2. Add lighting:
@@ -79,7 +86,19 @@
   4. Edit → Project Settings → Maps & Modes
        Editor Startup Map + Game Default Map → PresentationMap
 
-  D. Optional — Create a Niagara Aura System
+  E. Create the Sword Trail Material (for coloured trails)
+  ──────────────────────────────────────────────────────────
+  1. Content Browser → Right-click → Material → name it M_SwordTrail
+  2. In the Material editor set:
+       Blend Mode:    Translucent
+       Shading Model: Unlit
+  3. Add a VertexColor node → connect its RGB to Emissive Color
+  4. Connect VertexColor Alpha to Opacity
+  5. Compile and Save
+  6. In the FighterActor Blueprint (or its default properties), find the
+     SwordplayComponent and set Trail Material → M_SwordTrail
+
+  F. Optional — Create a Niagara Aura System
   ────────────────────────────────────────────
   1. Content Browser → Niagara System → New System from Template
   2. Choose "Fountain" or "Sprite Burst" template
@@ -93,9 +112,35 @@
   Press ▶ Play (or Ctrl+P) in the UE5 editor
   Press Escape to quit
 
-  Controls during playback:
+  Controls during playback (handled by Enhanced Input — no ini setup needed):
     Space / Enter  — Skip current section
     Escape         — Quit
+
+═══════════════════════════════════════════════════════════════════════
+  UE 5.8 COMPATIBILITY NOTES
+═══════════════════════════════════════════════════════════════════════
+
+  This project targets Unreal Engine 5.8. Key 5.8 features used:
+
+  · Enhanced Input System — Space/Enter/Escape bindings are registered
+    at runtime by BookOfFiveRingsGameMode using UInputAction +
+    UInputMappingContext + UEnhancedInputLocalPlayerSubsystem.
+    DefaultInput.ini no longer needs ActionMappings entries.
+
+  · Lumen Global Illumination — enabled via DefaultEngine.ini
+    (r.Lumen.DiffuseIndirect.Allow=1). Works out of the box with a
+    Directional Light + Sky Atmosphere in the level.
+
+  · Nanite — enabled for the project (r.Nanite.ProjectEnabled=1).
+    The procedural sword-trail meshes bypass Nanite automatically
+    (UProceduralMeshComponent does not use Nanite).
+
+  · UProceduralMeshComponent — used for real-time sword trails.
+    CreateMeshSection_LinearColor API is unchanged in 5.8.
+
+  · Double-precision FVector — all FVector math in SwordplayComponent
+    and FighterActor uses float literals (e.g. 160.f) which are
+    implicitly cast. No changes needed for 5.8 double-precision core.
 
 ═══════════════════════════════════════════════════════════════════════
   PROJECT FILE STRUCTURE
@@ -109,29 +154,30 @@
   │   ├── DefaultGame.ini
   │   └── DefaultInput.ini
   └── Source/BookOfFiveRings/
-      ├── BookOfFiveRings.Build.cs      — module dependencies
+      ├── BookOfFiveRings.Build.cs      — module dependencies (incl. EnhancedInput)
       ├── BookOfFiveRings.h/.cpp        — module entry point
       ├── Data/
       │   ├── ScrollDataAsset.h/.cpp    — 5 scroll data containers
       │   └── CharacterDataAsset.h/.cpp — fighter profiles + move lists
       ├── Core/
-      │   ├── BookOfFiveRingsGameMode   — spawns all actors, builds all data
-      │   └── PresentationManager      — master sequence step-queue
+      │   ├── BookOfFiveRingsGameMode   — spawns actors, builds data, wires Enhanced Input
+      │   └── PresentationManager      — master sequence step-queue + Skip/Quit handlers
       ├── Characters/
       │   └── FighterActor             — body/sword/aura/light actor
       ├── Animation/
-      │   └── SwordplayComponent       — 8 sword-trail move types
+      │   └── SwordplayComponent       — 8 sword-trail move types + TrailMaterial UPROPERTY
       └── UI/
           └── PresentationWidget       — UMG typewriter + transitions
 
 ═══════════════════════════════════════════════════════════════════════
-  SYSTEM REQUIREMENTS (UE5)
+  SYSTEM REQUIREMENTS (UE5.8)
 ═══════════════════════════════════════════════════════════════════════
 
-  OS:      Windows 10/11 64-bit (or macOS 13+)
+  OS:      Windows 10/11 64-bit (or macOS 14+)
   CPU:     6-core Intel/AMD (2.6 GHz+)
   RAM:     32 GB recommended (16 GB minimum)
   GPU:     8 GB VRAM — NVIDIA RTX 2070 / AMD RX 5700 or better
+           (RTX 3070+ recommended for Lumen + Nanite at 1080p)
   Storage: 50 GB free (25 GB UE5 engine + 25 GB project room)
 
 ═══════════════════════════════════════════════════════════════════════

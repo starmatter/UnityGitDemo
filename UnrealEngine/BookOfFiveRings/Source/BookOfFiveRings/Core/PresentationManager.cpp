@@ -2,6 +2,8 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "Engine/Engine.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 APresentationManager::APresentationManager()
 {
@@ -39,6 +41,21 @@ void APresentationManager::BeginPlay()
     // Start
     StepIndex = 0;
     RunNextStep();
+}
+
+// ── Enhanced Input handlers ───────────────────────────────────────────────────
+
+void APresentationManager::SkipSection()
+{
+    // Cancel any pending timer and advance immediately to the next step
+    GetWorldTimerManager().ClearTimer(StepTimer);
+    RunNextStep();
+}
+
+void APresentationManager::QuitPresentation()
+{
+    GetWorldTimerManager().ClearTimer(StepTimer);
+    UKismetSystemLibrary::QuitGame(this, nullptr, EQuitPreference::Quit, false);
 }
 
 // ── Step queue machinery ──────────────────────────────────────────────────────

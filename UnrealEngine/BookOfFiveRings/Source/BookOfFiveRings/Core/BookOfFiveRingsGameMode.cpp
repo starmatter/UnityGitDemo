@@ -2,6 +2,10 @@
 #include "UI/PresentationWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
 
 ABookOfFiveRingsGameMode::ABookOfFiveRingsGameMode()
 {
@@ -49,6 +53,56 @@ void ABookOfFiveRingsGameMode::BeginPlay()
             case EScrollType::Void:  Mgr->GokuData     = C; break;
             default: break;
         }
+    }
+
+    // ── Wire Enhanced Input (UE 5.8) ──────────────────────────────────────────
+    SetupEnhancedInput(PC, Mgr);
+}
+
+void ABookOfFiveRingsGameMode::SetupEnhancedInput(APlayerController* PC, APresentationManager* Mgr)
+{
+    if (!PC || !Mgr) return;
+
+    // Build input actions at runtime — no content assets required
+    IA_Skip = NewObject<UInputAction>(this, TEXT("IA_Skip"));
+    IA_Skip->ValueType = EInputActionValueType::Boolean;
+
+    IA_Quit = NewObject<UInputAction>(this, TEXT("IA_Quit"));
+    IA_Quit->ValueType = EInputActionValueType::Boolean;
+
+    // Build mapping context
+    PresentationIMC = NewObject<UInputMappingContext>(this, TEXT("IMC_Presentation"));
+
+    // Space → Skip
+    FEnhancedActionKeyMapping& SpaceMap = PresentationIMC->MapKey(IA_Skip, EKeys::SpaceBar);
+    SpaceMap.Triggers.Empty();
+
+    // Enter → Skip
+    FEnhancedActionKeyMapping& EnterMap = PresentationIMC->MapKey(IA_Skip, EKeys::Enter);
+    EnterMap.Triggers.Empty();
+
+    // Escape → Quit
+    FEnhancedActionKeyMapping& EscMap = PresentationIMC->MapKey(IA_Quit, EKeys::Escape);
+    EscMap.Triggers.Empty();
+
+    // Register the mapping context with priority 0
+    if (ULocalPlayer* LP = PC->GetLocalPlayer())
+    {
+        if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+                LP->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+        {
+            Subsystem->AddMappingContext(PresentationIMC, 0);
+        }
+    }
+
+    // Bind actions on the player's Enhanced Input component
+    if (UEnhancedInputComponent* EIC =
+            Cast<UEnhancedInputComponent>(PC->InputComponent))
+    {
+        EIC->BindAction(IA_Skip, ETriggerEvent::Started, Mgr,
+                        &APresentationManager::SkipSection);
+        EIC->BindAction(IA_Quit, ETriggerEvent::Started, Mgr,
+                        &APresentationManager::QuitPresentation);
     }
 }
 

@@ -34,6 +34,9 @@ public:
     FOnMoveComplete OnMoveComplete;
 
     // Trail visual settings
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Trail")
+    UMaterialInterface* TrailMaterial = nullptr;
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Trail")
     float TrailWidth = 8.f;          // cm
 

@@ -315,9 +315,10 @@ void USwordplayComponent::ClearTrailMesh()
 
 UMaterialInterface* USwordplayComponent::GetTrailMaterial(const FLinearColor& /*Color*/)
 {
-    // Returns the engine default unlit material.
-    // In a full project, create M_SwordTrail (unlit, translucent, vertex-color) in Content Browser
-    // and reference it here via a UPROPERTY.
+    // Use the editor-assigned TrailMaterial when available.
+    // In the Content Browser, create M_SwordTrail (Blend Mode: Translucent, Shading Model: Unlit,
+    // vertex color enabled) and assign it to the SwordplayComponent in the FighterActor Blueprint.
+    if (TrailMaterial) return TrailMaterial;
     return UMaterial::GetDefaultMaterial(MD_Surface);
 }
 
