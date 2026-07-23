@@ -1,0 +1,18 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.8",
+	"Category": "Presentation",
+	"Description": "Animated presentation of Miyamoto Musashis Go Rin No Sho (The Book of Five Rings) featuring Broly, Superman/Kal-El, Vegeta, and Goku.",
+	"Modules": [
+		{
+			"Name": "BookOfFiveRings",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{ "Name": "Niagara",                  "Enabled": true },
+		{ "Name": "ProceduralMeshComponent",  "Enabled": true },
+		{ "Name": "Paper2D",                  "Enabled": false }
+	]
+}
