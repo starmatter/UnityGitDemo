@@ -79,6 +79,9 @@ public:
 protected:
     virtual void BeginPlay() override;
 
+    UFUNCTION()
+    void RunNextStep();
+
 private:
     // ── Step queue ────────────────────────────────────────────────────────────
     struct FStep
@@ -96,7 +99,6 @@ private:
 
     void Enqueue(TFunction<void()> Action, float DelayAfter = 0.f,
                  bool bWaitForTypewriter = false);
-    void RunNextStep();
 
     // ── Sequence builders ─────────────────────────────────────────────────────
     void BuildTitleCard();
