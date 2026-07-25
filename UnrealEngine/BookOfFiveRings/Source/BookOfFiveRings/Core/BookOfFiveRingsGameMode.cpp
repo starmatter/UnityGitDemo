@@ -72,18 +72,9 @@ void ABookOfFiveRingsGameMode::SetupEnhancedInput(APlayerController* PC, APresen
 
     // Build mapping context
     PresentationIMC = NewObject<UInputMappingContext>(this, TEXT("IMC_Presentation"));
-
-    // Space → Skip
-    FEnhancedActionKeyMapping& SpaceMap = PresentationIMC->MapKey(IA_Skip, EKeys::SpaceBar);
-    SpaceMap.Triggers.Empty();
-
-    // Enter → Skip
-    FEnhancedActionKeyMapping& EnterMap = PresentationIMC->MapKey(IA_Skip, EKeys::Enter);
-    EnterMap.Triggers.Empty();
-
-    // Escape → Quit
-    FEnhancedActionKeyMapping& EscMap = PresentationIMC->MapKey(IA_Quit, EKeys::Escape);
-    EscMap.Triggers.Empty();
+    PresentationIMC->MapKey(IA_Skip, EKeys::SpaceBar);
+    PresentationIMC->MapKey(IA_Skip, EKeys::Enter);
+    PresentationIMC->MapKey(IA_Quit, EKeys::Escape);
 
     // Register the mapping context with priority 0
     if (ULocalPlayer* LP = PC->GetLocalPlayer())
