@@ -1,7 +1,68 @@
 #include "PresentationWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Blueprint/WidgetTree.h"
 #include "Styling/SlateTypes.h"
+
+// ── Programmatic widget construction (no Blueprint required) ──────────────────
+
+void UPresentationWidget::NativeOnInitialized()
+{
+    Super::NativeOnInitialized();
+
+    // If BindWidget didn't populate our slots (no WBP Blueprint was used),
+    // build the entire widget hierarchy in C++.
+    if (Background || !WidgetTree) return;
+
+    UCanvasPanel* Canvas = WidgetTree->ConstructWidget<UCanvasPanel>(
+        UCanvasPanel::StaticClass(), TEXT("RootCanvas"));
+    WidgetTree->RootWidget = Canvas;
+
+    auto AddImage = [&](FName Name, float MinX, float MinY, float MaxX, float MaxY,
+                        const FLinearColor& Col) -> UImage*
+    {
+        UImage* Img = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass(), Name);
+        Img->SetColorAndOpacity(Col);
+        UCanvasPanelSlot* S = Canvas->AddChildToCanvas(Img);
+        S->SetAnchors(FAnchors(MinX, MinY, MaxX, MaxY));
+        S->SetOffsets(FMargin(0.f));
+        return Img;
+    };
+
+    auto AddText = [&](FName Name, float MinX, float MinY, float MaxX, float MaxY,
+                       ETextJustify::Type Justify = ETextJustify::Center) -> UTextBlock*
+    {
+        UTextBlock* B = WidgetTree->ConstructWidget<UTextBlock>(UTextBlock::StaticClass(), Name);
+        B->SetJustification(Justify);
+        B->SetAutoWrapText(true);
+        UCanvasPanelSlot* S = Canvas->AddChildToCanvas(B);
+        S->SetAnchors(FAnchors(MinX, MinY, MaxX, MaxY));
+        S->SetOffsets(FMargin(0.f));
+        return B;
+    };
+
+    // Background covers the full screen; border sits inside it
+    Background    = AddImage(TEXT("Background"),  0.f,   0.f,  1.f,  1.f,
+                              FLinearColor(0.04f, 0.02f, 0.01f, 1.f));
+    ScrollBorder  = AddImage(TEXT("ScrollBorder"),0.04f, 0.03f, 0.96f, 0.97f,
+                              FLinearColor(0.55f, 0.42f, 0.10f, 0.12f));
+
+    // Text layout — arranged top-to-bottom so all six can coexist without overlap:
+    //   [3-13%]  Scroll / presentation title   (large, centred)
+    //   [13-27%] Japanese character + romanji  (medium, centred)
+    //   [27-50%] Musashi quote                 (wrap-safe region)
+    //   [50-62%] Character name / battle cry   (large, centred)
+    //   [48-66%] Principles / combat moves     (left-aligned list)
+    //   [66-94%] Philosophy / move description (centred, smaller)
+    ScrollTitleText   = AddText(TEXT("ScrollTitleText"),  0.05f, 0.03f, 0.95f, 0.13f);
+    JapaneseCharText  = AddText(TEXT("JapaneseCharText"), 0.05f, 0.13f, 0.95f, 0.27f);
+    MusashiQuoteText  = AddText(TEXT("MusashiQuoteText"), 0.07f, 0.27f, 0.93f, 0.50f);
+    CharacterNameText = AddText(TEXT("CharacterNameText"),0.05f, 0.50f, 0.95f, 0.62f);
+    PrinciplesText    = AddText(TEXT("PrinciplesText"),   0.07f, 0.48f, 0.93f, 0.66f, ETextJustify::Left);
+    PhilosophyText    = AddText(TEXT("PhilosophyText"),   0.07f, 0.66f, 0.93f, 0.94f);
+}
 
 // ── Typewriter ────────────────────────────────────────────────────────────────
 

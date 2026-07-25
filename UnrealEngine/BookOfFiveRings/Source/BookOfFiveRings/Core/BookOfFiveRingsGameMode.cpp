@@ -70,11 +70,14 @@ void ABookOfFiveRingsGameMode::SetupEnhancedInput(APlayerController* PC, APresen
     IA_Quit = NewObject<UInputAction>(this, TEXT("IA_Quit"));
     IA_Quit->ValueType = EInputActionValueType::Boolean;
 
-    // Build mapping context
+    // Build mapping context — keyboard and Xbox gamepad (via wireless dongle)
     PresentationIMC = NewObject<UInputMappingContext>(this, TEXT("IMC_Presentation"));
     PresentationIMC->MapKey(IA_Skip, EKeys::SpaceBar);
     PresentationIMC->MapKey(IA_Skip, EKeys::Enter);
+    PresentationIMC->MapKey(IA_Skip, EKeys::Gamepad_FaceButton_Bottom); // A button — advance
+    PresentationIMC->MapKey(IA_Skip, EKeys::Gamepad_Special_Right);     // Start — advance
     PresentationIMC->MapKey(IA_Quit, EKeys::Escape);
+    PresentationIMC->MapKey(IA_Quit, EKeys::Gamepad_FaceButton_Right);  // B button — quit
 
     // Register the mapping context with priority 0
     if (ULocalPlayer* LP = PC->GetLocalPlayer())

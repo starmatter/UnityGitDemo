@@ -15,10 +15,11 @@ void APresentationManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Create and add widget to viewport
-    if (WidgetClass)
+    // Create and add widget to viewport — fall back to base C++ class if no Blueprint set
     {
-        Widget = CreateWidget<UPresentationWidget>(GetWorld(), WidgetClass);
+        TSubclassOf<UPresentationWidget> WClass =
+            WidgetClass ? WidgetClass : UPresentationWidget::StaticClass();
+        Widget = CreateWidget<UPresentationWidget>(GetWorld(), WClass);
         if (Widget)
         {
             Widget->AddToViewport(10);

@@ -24,13 +24,13 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnTypewriterComplete);
  *   PhilosophyText      → UTextBlock
  *   HUDPanel            → UCanvasPanel  (kanji progress dots — populated at runtime)
  */
-UCLASS(Abstract)
+UCLASS()
 class BOOKOFFIVERINGS_API UPresentationWidget : public UUserWidget
 {
     GENERATED_BODY()
 
 public:
-    // ── Bound slots (set meta = (BindWidget) so UMG validates at compile time) ─
+    // ── Widget slots — populated by Blueprint BindWidget OR by NativeOnInitialized ─
     UPROPERTY(meta = (BindWidget)) UImage*      Background       = nullptr;
     UPROPERTY(meta = (BindWidget)) UImage*      ScrollBorder     = nullptr;
     UPROPERTY(meta = (BindWidget)) UTextBlock*  ScrollTitleText  = nullptr;
@@ -78,6 +78,7 @@ public:
     void FadeCanvas(float TargetAlpha, float Duration);
 
 protected:
+    virtual void NativeOnInitialized() override;
     virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 private:
