@@ -1,4 +1,5 @@
 #include "PresentationManager.h"
+#include "Animation/SwordplayComponent.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"

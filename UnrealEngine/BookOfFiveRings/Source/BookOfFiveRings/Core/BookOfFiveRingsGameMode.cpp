@@ -27,14 +27,14 @@ void ABookOfFiveRingsGameMode::BeginPlay()
     // ── Spawn fighter stage actor ─────────────────────────────────────────────
     FActorSpawnParameters SP;
     SP.Owner = this;
+    UClass* FighterCls = FighterClass ? FighterClass.Get() : AFighterActor::StaticClass();
     AFighterActor* Fighter = GetWorld()->SpawnActor<AFighterActor>(
-        FighterClass ? FighterClass : AFighterActor::StaticClass(),
-        FVector(0.f, 200.f, 0.f), FRotator::ZeroRotator, SP);
+        FighterCls, FVector(0.f, 200.f, 0.f), FRotator::ZeroRotator, SP);
 
     // ── Spawn presentation manager ────────────────────────────────────────────
+    UClass* ManagerCls = ManagerClass ? ManagerClass.Get() : APresentationManager::StaticClass();
     APresentationManager* Mgr = GetWorld()->SpawnActor<APresentationManager>(
-        ManagerClass ? ManagerClass : APresentationManager::StaticClass(),
-        FVector::ZeroVector, FRotator::ZeroRotator, SP);
+        ManagerCls, FVector::ZeroVector, FRotator::ZeroRotator, SP);
 
     if (!Mgr) return;
 
