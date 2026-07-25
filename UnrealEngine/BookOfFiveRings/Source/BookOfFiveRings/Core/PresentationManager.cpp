@@ -347,6 +347,15 @@ void APresentationManager::BuildClosingMeditation()
     Enqueue([this](){}, 6.f);
 
     Enqueue([this]() { Widget->FadeCanvas(0.f, 2.f); }, 2.5f);
+
+    // Loop back to the title card
+    Enqueue([this]()
+    {
+        StepIndex = 0;
+        Widget->ClearAllText();
+        Widget->SetRenderOpacity(1.f);
+        RunNextStep();
+    }, 0.f);
 }
 
 // ── Helper ────────────────────────────────────────────────────────────────────
