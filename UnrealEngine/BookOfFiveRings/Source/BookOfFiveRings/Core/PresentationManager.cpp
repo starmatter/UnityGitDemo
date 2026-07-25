@@ -17,8 +17,7 @@ void APresentationManager::BeginPlay()
 
     // Create and add widget to viewport — fall back to base C++ class if no Blueprint set
     {
-        TSubclassOf<UPresentationWidget> WClass =
-            WidgetClass ? WidgetClass : UPresentationWidget::StaticClass();
+        UClass* WClass = WidgetClass ? WidgetClass.Get() : UPresentationWidget::StaticClass();
         Widget = CreateWidget<UPresentationWidget>(GetWorld(), WClass);
         if (Widget)
         {
