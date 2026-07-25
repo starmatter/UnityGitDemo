@@ -22,14 +22,7 @@ public class BookOfFiveRings : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[] { });
 
-        // Allow Blueprint access to all public headers
-        PublicIncludePaths.AddRange(new string[]
-        {
-            "BookOfFiveRings/Data",
-            "BookOfFiveRings/Core",
-            "BookOfFiveRings/Characters",
-            "BookOfFiveRings/Animation",
-            "BookOfFiveRings/UI"
-        });
+        // Add the module root so subdirectory includes like "Data/Foo.h" resolve correctly
+        PublicIncludePaths.Add(ModuleDirectory);
     }
 }

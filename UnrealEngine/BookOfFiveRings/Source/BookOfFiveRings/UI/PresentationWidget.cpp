@@ -75,7 +75,7 @@ void UPresentationWidget::SetTextSafe(UTextBlock* Block, const FString& Text,
 void UPresentationWidget::BeginBackgroundTransition(const FLinearColor& TargetColor, float Duration)
 {
     if (Background)
-        BGStartColor = Background->GetColorAndOpacity().GetSpecifiedColor();
+        BGStartColor = Background->GetColorAndOpacity();
     else
         BGStartColor = FLinearColor::Black;
 
@@ -90,7 +90,7 @@ void UPresentationWidget::BeginBackgroundTransition(const FLinearColor& TargetCo
 void UPresentationWidget::Flash(const FLinearColor& InFlashColor, float Duration)
 {
     if (Background)
-        FlashBaseColor = Background->GetColorAndOpacity().GetSpecifiedColor();
+        FlashBaseColor = Background->GetColorAndOpacity();
     else
         FlashBaseColor = FLinearColor::Black;
 
